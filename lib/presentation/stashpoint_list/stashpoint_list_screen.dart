@@ -67,153 +67,158 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
       child: Scaffold(
         body: SafeArea(
           child: BlocListener<StashpointListBloc, StashpointListState>(
-            listener: (context, state) {
-              try {
-                if (state.isLastPage) {
-                  _pagingController.appendLastPage(state.stashpointList);
-                } else {
-                  _pagingController.appendPage(
-                      state.stashpointList, state.currentPage);
-                }
-              } catch (error) {
-                _pagingController.error = error;
-              }
-            },
-            child: BlocBuilder<StashpointListBloc, StashpointListState>(
-                builder: (context, state) {
-              return PageLoader(
-                isLoading: state.isLoading,
-                child: NestedScrollView(
-                  controller: _scrollController,
-                  headerSliverBuilder: ((context, innerBoxIsScrolled) {
-                    return [
-                      SliverAppBar(
-                        expandedHeight: 300.0,
-                        backgroundColor: lightContainer,
-                        flexibleSpace: FlexibleSpaceBar(
-                          collapseMode: CollapseMode.pin,
-                          background: Center(
-                            child: Container(
-                              color: lightContainer,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 48),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "Welcome!",
-                                          style: _headerTextStyle,
-                                        ),
-                                        SvgPicture.asset(
-                                          'assets/images/travelers.svg',
-                                          height: 120,
-                                          fit: BoxFit.scaleDown,
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "from Mar 3, 04:30 AM",
-                                          style: _subHeaderTextStyle,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "2",
-                                              style: _subHeaderTextStyle,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Icon(
-                                              Icons.trolley,
-                                              color: primaryColor,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      "to Mar 3, 04:30 AM",
-                                      style: _subHeaderTextStyle,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        bottom: AppBar(
-                          flexibleSpace: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            child: SearchBar(
-                              leading: const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Icon(
-                                  Icons.location_city,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              trailing: const [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Icon(
-                                    Icons.my_location,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
-                              textStyle: MaterialStateProperty.resolveWith((_) {
-                                return _searchTextStyle;
-                              }),
-                              hintText: "Current Location",
-                              backgroundColor:
-                                  MaterialStateProperty.all(primaryColor),
-                            ),
-                          ),
-                        ),
-                      )
-                    ];
-                  }),
-                  body: PagedListView<int, StashpointItem>(
-                    pagingController: _pagingController,
-                    builderDelegate: PagedChildBuilderDelegate(
-                      newPageProgressIndicatorBuilder: (context) =>
-                          const Center(
-                        child: CircularProgressIndicator(
-                          color: primaryColor,
-                        ),
-                      ),
-                      itemBuilder: (context, item, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(item.name),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              );
-            }),
+            listener: handleEventChange,
+            child: blocBuilder(),
           ),
         ),
+      ),
+    );
+  }
+
+  void handleEventChange(BuildContext context, StashpointListState state) {
+    try {
+      if (state.isLastPage) {
+        _pagingController.appendLastPage(state.stashpointList);
+      } else {
+        _pagingController.appendPage(state.stashpointList, state.currentPage);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
+
+  Widget blocBuilder() {
+    return BlocBuilder<StashpointListBloc, StashpointListState>(
+      builder: (context, state) {
+        return PageLoader(
+          isLoading: state.isLoading,
+          child: NestedScrollView(
+              controller: _scrollController,
+              headerSliverBuilder: ((context, innerBoxIsScrolled) {
+                return [headerSection()];
+              }),
+              body: listSection()),
+        );
+      },
+    );
+  }
+
+  Widget headerSection() {
+    return SliverAppBar(
+      expandedHeight: 300.0,
+      backgroundColor: lightContainer,
+      flexibleSpace: FlexibleSpaceBar(
+        collapseMode: CollapseMode.pin,
+        background: Center(
+          child: Container(
+            color: lightContainer,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 48),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Welcome!",
+                        style: _headerTextStyle,
+                      ),
+                      SvgPicture.asset(
+                        'assets/images/travelers.svg',
+                        height: 120,
+                        fit: BoxFit.scaleDown,
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "from Mar 3, 04:30 AM",
+                        style: _subHeaderTextStyle,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "2",
+                            style: _subHeaderTextStyle,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.trolley,
+                            color: primaryColor,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "to Mar 3, 04:30 AM",
+                    style: _subHeaderTextStyle,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      bottom: AppBar(
+        flexibleSpace: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SearchBar(
+            leading: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Icon(
+                Icons.location_city,
+                color: Colors.white,
+              ),
+            ),
+            trailing: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Icon(
+                  Icons.my_location,
+                  color: Colors.white,
+                ),
+              )
+            ],
+            textStyle: MaterialStateProperty.resolveWith((_) {
+              return _searchTextStyle;
+            }),
+            hintText: "Current Location",
+            backgroundColor: MaterialStateProperty.all(primaryColor),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget listSection() {
+    return PagedListView<int, StashpointItem>(
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate(
+        newPageProgressIndicatorBuilder: (context) => const Center(
+          child: CircularProgressIndicator(
+            color: primaryColor,
+          ),
+        ),
+        itemBuilder: (context, item, index) {
+          return Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(item.name),
+          );
+        },
       ),
     );
   }
