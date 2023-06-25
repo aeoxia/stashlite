@@ -1,4 +1,4 @@
 import 'dart:ui';
 
-const mainContainer = Color(0xFFF6F8FE);
-const loader = Color(0xFF3A7DF6);
+const lightContainer = Color(0xFFF6F8FE);
+const primaryColor = Color(0xFF0474e8);

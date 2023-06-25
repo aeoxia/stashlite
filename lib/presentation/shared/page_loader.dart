@@ -17,10 +17,10 @@ class PageLoader extends StatelessWidget {
           visible: isLoading,
           child: Positioned.fill(
             child: Container(
-              color: mainContainer,
+              color: lightContainer,
               child: const Center(
                 child: CircularProgressIndicator(
-                  color: loader,
+                  color: primaryColor,
                 ),
               ),
             ),
