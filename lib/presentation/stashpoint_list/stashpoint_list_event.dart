@@ -3,5 +3,8 @@ abstract class StashpointListEvent {
 }
 
 class GetStashpointList extends StashpointListEvent {
-  const GetStashpointList();
+  final int page;
+  const GetStashpointList({
+    required this.page,
+  });
 }

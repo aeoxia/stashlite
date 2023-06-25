@@ -12,12 +12,16 @@ GetStashPointResponse _$GetStashPointResponseFromJson(
       items: (json['items'] as List<dynamic>?)
           ?.map((e) => GetStashpointItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-    );
+    )
+      ..currentPage = json['page'] as int?
+      ..hasNextPage = json['has_next'] as bool?;
 
 Map<String, dynamic> _$GetStashPointResponseToJson(
         GetStashPointResponse instance) =>
     <String, dynamic>{
       'items': instance.items,
+      'page': instance.currentPage,
+      'has_next': instance.hasNextPage,
     };
 
 GetStashpointItem _$GetStashpointItemFromJson(Map<String, dynamic> json) =>

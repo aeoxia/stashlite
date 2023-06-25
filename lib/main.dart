@@ -1,4 +1,3 @@
-import 'package:city_stasher_lite/data/city_stasher_repository.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

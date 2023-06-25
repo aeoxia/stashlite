@@ -16,7 +16,9 @@ class StashpointListBloc
 
   FutureOr<void> _getStashpointList(
       GetStashpointList event, Emitter<StashpointListState> emit) async {
-    emit(state.copyWith(isLoading: true));
+    if (state.stashpointList.isEmpty) {
+      emit(state.copyWith(isLoading: true));
+    }
     final result = await _repository.getStashpoints(
       active: true,
       availability: "all",
@@ -25,8 +27,8 @@ class StashpointListBloc
       pickUp: "2023-06-25T19:00:00",
       latitude: "-0.0810913",
       longtitude: "-0.0810913",
-      page: 1,
-      itemCount: 250,
+      page: event.page,
+      itemCount: 20,
       sort: "distance",
     );
 
@@ -36,6 +38,12 @@ class StashpointListBloc
               item.name ?? "",
             ))
         .toList();
-    emit(state.copyWith(isLoading: false, stashpointList: stashpointList));
+
+    emit(state.copyWith(
+      isLoading: false,
+      stashpointList: stashpointList,
+      isLastPage: !(result.hasNextPage ?? false),
+      currentPage: result.currentPage ?? 0,
+    ));
   }
 }

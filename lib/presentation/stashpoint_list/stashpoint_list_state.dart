@@ -6,6 +6,15 @@ class StashpointListState with _$StashpointListState {
   const factory StashpointListState({
     @Default(true) bool isLoading,
     @Default([]) List<StashpointItem> stashpointList,
+    @Default(1) int capacity,
+    @Default("") String dropOff,
+    @Default("") String pickUp,
+    @Default("") String longtitude,
+    @Default("") String latitude,
+    @Default("") String sort,
+    @Default("") String currentLocationName,
+    @Default(0) int currentPage,
+    @Default(false) bool isLastPage,
   }) = _StashpointListState;
 }
 

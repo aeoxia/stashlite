@@ -7,6 +7,10 @@ part 'get_stashpoint_response.g.dart';
 class GetStashPointResponse {
   @JsonKey(name: "items")
   List<GetStashpointItem>? items;
+  @JsonKey(name: "page")
+  int? currentPage;
+  @JsonKey(name: "has_next")
+  bool? hasNextPage;
 
   GetStashPointResponse({this.items});
 
