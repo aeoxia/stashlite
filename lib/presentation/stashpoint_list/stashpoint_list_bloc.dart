@@ -16,6 +16,7 @@ class StashpointListBloc
     on<IncreaseCapacity>(_increaseCapacity);
     on<DecreaseCapacity>(_decreaseCapacity);
     on<SetDates>(_setDates);
+    on<SortStashpointList>(_sortStashpointList);
   }
 
   FutureOr<void> _getStashpointList(
@@ -33,7 +34,7 @@ class StashpointListBloc
       longtitude: "-0.0810913",
       page: event.page,
       itemCount: 20,
-      sort: "distance",
+      sort: sortFilter[state.selectedSort]!,
     );
 
     final stashpointList = (result.items ?? [])
@@ -77,6 +78,15 @@ class StashpointListBloc
         dropOff: event.dropOff.toDateString(),
         pickUp: event.pickUp.toDateString(),
         stashpointList: []));
+    add(const GetStashpointList(page: 1));
+  }
+
+  FutureOr<void> _sortStashpointList(
+      SortStashpointList event, Emitter<StashpointListState> emit) async {
+    emit(state.copyWith(
+      selectedSort: event.index,
+      stashpointList: [],
+    ));
     add(const GetStashpointList(page: 1));
   }
 }

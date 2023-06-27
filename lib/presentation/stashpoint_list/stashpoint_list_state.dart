@@ -13,6 +13,7 @@ class StashpointListState with _$StashpointListState {
     @Default("") String latitude,
     @Default("") String sort,
     @Default("") String currentLocationName,
+    @Default(0) int selectedSort,
     @Default(0) int currentPage,
     @Default(false) bool isLastPage,
   }) = _StashpointListState;
@@ -24,3 +25,5 @@ class StashpointItem {
 
   StashpointItem(this.id, this.name);
 }
+
+Map<int, String> sortFilter = {0: "distance", 1: "rating"};

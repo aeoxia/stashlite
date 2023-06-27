@@ -25,6 +25,7 @@ mixin _$StashpointListState {
   String get latitude => throw _privateConstructorUsedError;
   String get sort => throw _privateConstructorUsedError;
   String get currentLocationName => throw _privateConstructorUsedError;
+  int get selectedSort => throw _privateConstructorUsedError;
   int get currentPage => throw _privateConstructorUsedError;
   bool get isLastPage => throw _privateConstructorUsedError;
 
@@ -49,6 +50,7 @@ abstract class $StashpointListStateCopyWith<$Res> {
       String latitude,
       String sort,
       String currentLocationName,
+      int selectedSort,
       int currentPage,
       bool isLastPage});
 }
@@ -75,6 +77,7 @@ class _$StashpointListStateCopyWithImpl<$Res, $Val extends StashpointListState>
     Object? latitude = null,
     Object? sort = null,
     Object? currentLocationName = null,
+    Object? selectedSort = null,
     Object? currentPage = null,
     Object? isLastPage = null,
   }) {
@@ -115,6 +118,10 @@ class _$StashpointListStateCopyWithImpl<$Res, $Val extends StashpointListState>
           ? _value.currentLocationName
           : currentLocationName // ignore: cast_nullable_to_non_nullable
               as String,
+      selectedSort: null == selectedSort
+          ? _value.selectedSort
+          : selectedSort // ignore: cast_nullable_to_non_nullable
+              as int,
       currentPage: null == currentPage
           ? _value.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
@@ -145,6 +152,7 @@ abstract class _$$_StashpointListStateCopyWith<$Res>
       String latitude,
       String sort,
       String currentLocationName,
+      int selectedSort,
       int currentPage,
       bool isLastPage});
 }
@@ -169,6 +177,7 @@ class __$$_StashpointListStateCopyWithImpl<$Res>
     Object? latitude = null,
     Object? sort = null,
     Object? currentLocationName = null,
+    Object? selectedSort = null,
     Object? currentPage = null,
     Object? isLastPage = null,
   }) {
@@ -209,6 +218,10 @@ class __$$_StashpointListStateCopyWithImpl<$Res>
           ? _value.currentLocationName
           : currentLocationName // ignore: cast_nullable_to_non_nullable
               as String,
+      selectedSort: null == selectedSort
+          ? _value.selectedSort
+          : selectedSort // ignore: cast_nullable_to_non_nullable
+              as int,
       currentPage: null == currentPage
           ? _value.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
@@ -234,6 +247,7 @@ class _$_StashpointListState implements _StashpointListState {
       this.latitude = "",
       this.sort = "",
       this.currentLocationName = "",
+      this.selectedSort = 0,
       this.currentPage = 0,
       this.isLastPage = false})
       : _stashpointList = stashpointList;
@@ -273,6 +287,9 @@ class _$_StashpointListState implements _StashpointListState {
   final String currentLocationName;
   @override
   @JsonKey()
+  final int selectedSort;
+  @override
+  @JsonKey()
   final int currentPage;
   @override
   @JsonKey()
@@ -280,7 +297,7 @@ class _$_StashpointListState implements _StashpointListState {
 
   @override
   String toString() {
-    return 'StashpointListState(isLoading: $isLoading, stashpointList: $stashpointList, capacity: $capacity, dropOff: $dropOff, pickUp: $pickUp, longtitude: $longtitude, latitude: $latitude, sort: $sort, currentLocationName: $currentLocationName, currentPage: $currentPage, isLastPage: $isLastPage)';
+    return 'StashpointListState(isLoading: $isLoading, stashpointList: $stashpointList, capacity: $capacity, dropOff: $dropOff, pickUp: $pickUp, longtitude: $longtitude, latitude: $latitude, sort: $sort, currentLocationName: $currentLocationName, selectedSort: $selectedSort, currentPage: $currentPage, isLastPage: $isLastPage)';
   }
 
   @override
@@ -303,6 +320,8 @@ class _$_StashpointListState implements _StashpointListState {
             (identical(other.sort, sort) || other.sort == sort) &&
             (identical(other.currentLocationName, currentLocationName) ||
                 other.currentLocationName == currentLocationName) &&
+            (identical(other.selectedSort, selectedSort) ||
+                other.selectedSort == selectedSort) &&
             (identical(other.currentPage, currentPage) ||
                 other.currentPage == currentPage) &&
             (identical(other.isLastPage, isLastPage) ||
@@ -321,6 +340,7 @@ class _$_StashpointListState implements _StashpointListState {
       latitude,
       sort,
       currentLocationName,
+      selectedSort,
       currentPage,
       isLastPage);
 
@@ -343,6 +363,7 @@ abstract class _StashpointListState implements StashpointListState {
       final String latitude,
       final String sort,
       final String currentLocationName,
+      final int selectedSort,
       final int currentPage,
       final bool isLastPage}) = _$_StashpointListState;
 
@@ -364,6 +385,8 @@ abstract class _StashpointListState implements StashpointListState {
   String get sort;
   @override
   String get currentLocationName;
+  @override
+  int get selectedSort;
   @override
   int get currentPage;
   @override

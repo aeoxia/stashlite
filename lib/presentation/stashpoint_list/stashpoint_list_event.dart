@@ -17,6 +17,11 @@ class DecreaseCapacity extends StashpointListEvent {
   const DecreaseCapacity();
 }
 
+class SortStashpointList extends StashpointListEvent {
+  final int index;
+  const SortStashpointList({required this.index});
+}
+
 class SetDates extends StashpointListEvent {
   final DateTime dropOff;
   final DateTime pickUp;

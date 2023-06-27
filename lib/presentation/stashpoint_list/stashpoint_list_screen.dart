@@ -108,7 +108,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
 
   Widget headerSection(StashpointListState state) {
     return SliverAppBar(
-      expandedHeight: 300.0,
+      expandedHeight: 370.0,
       backgroundColor: lightContainer,
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
@@ -229,28 +229,48 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
       bottom: AppBar(
         flexibleSpace: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: SearchBar(
-            leading: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Icon(
-                Icons.location_city,
-                color: Colors.white,
-              ),
-            ),
-            trailing: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Icon(
-                  Icons.my_location,
-                  color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SearchBar(
+                leading: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Icon(
+                    Icons.location_city,
+                    color: Colors.white,
+                  ),
                 ),
-              )
+                trailing: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(
+                      Icons.my_location,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+                textStyle: MaterialStateProperty.resolveWith((_) {
+                  return _searchTextStyle;
+                }),
+                hintText: "Current Location",
+                backgroundColor: MaterialStateProperty.all(primaryColor),
+              ),
+              DropdownButtonHideUnderline(
+                child: DropdownButton(
+                  value: state.selectedSort,
+                  items: sortFilter.entries.map((MapEntry<int, String> entry) {
+                    return DropdownMenuItem<int>(
+                      value: entry.key,
+                      child: Text(entry.value),
+                    );
+                  }).toList(),
+                  onChanged: (selection) {
+                    _bloc.add(SortStashpointList(index: selection ?? 0));
+                  },
+                ),
+              ),
             ],
-            textStyle: MaterialStateProperty.resolveWith((_) {
-              return _searchTextStyle;
-            }),
-            hintText: "Current Location",
-            backgroundColor: MaterialStateProperty.all(primaryColor),
           ),
         ),
       ),
