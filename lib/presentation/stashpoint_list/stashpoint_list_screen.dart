@@ -7,6 +7,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../styles/colors.dart';
 
@@ -139,30 +140,64 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "from Mar 3, 04:30 AM",
-                        style: _subHeaderTextStyle,
+                      InkWell(
+                        onTap: () async {
+                          List<DateTime>? dateTimeList =
+                              await showOmniDateTimeRangePicker(
+                                  context: context,
+                                  theme: ThemeData(
+                                      cardColor: lightContainer,
+                                      colorScheme: ColorScheme.light(
+                                          primary: primaryColor)));
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "from Mar 3, 04:30 AM",
+                              style: _subHeaderTextStyle,
+                            ),
+                            Text(
+                              "to Mar 3, 04:30 AM",
+                              style: _subHeaderTextStyle,
+                            ),
+                          ],
+                        ),
                       ),
                       Row(
                         children: [
-                          Text(
-                            "2",
-                            style: _subHeaderTextStyle,
-                          ),
                           const SizedBox(
                             width: 5,
                           ),
-                          Icon(
-                            Icons.trolley,
-                            color: primaryColor,
-                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.remove_circle,
+                                    color: primaryColor,
+                                    size: 18,
+                                  )),
+                              Icon(
+                                Icons.luggage_outlined,
+                                color: primaryColor,
+                              ),
+                              Text(
+                                "2",
+                                style: _subHeaderTextStyle,
+                              ),
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.add_circle,
+                                    color: primaryColor,
+                                    size: 18,
+                                  ))
+                            ],
+                          )
                         ],
                       ),
                     ],
-                  ),
-                  Text(
-                    "to Mar 3, 04:30 AM",
-                    style: _subHeaderTextStyle,
                   ),
                   const SizedBox(
                     height: 10,
