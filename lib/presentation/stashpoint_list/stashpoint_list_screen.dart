@@ -1,4 +1,5 @@
 import 'package:city_stasher_lite/di.dart';
+import 'package:city_stasher_lite/presentation/shared/formatter.dart';
 import 'package:city_stasher_lite/presentation/shared/page_loader.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_bloc.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_event.dart';
@@ -76,7 +77,8 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
     );
   }
 
-  void handleEventChange(BuildContext context, StashpointListState state) {
+  void handleEventChange(
+      BuildContext context, StashpointListState state) async {
     try {
       if (state.isLastPage) {
         _pagingController.appendLastPage(state.stashpointList);
@@ -96,15 +98,15 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
           child: NestedScrollView(
               controller: _scrollController,
               headerSliverBuilder: ((context, innerBoxIsScrolled) {
-                return [headerSection()];
+                return [headerSection(state)];
               }),
-              body: listSection()),
+              body: listSection(state)),
         );
       },
     );
   }
 
-  Widget headerSection() {
+  Widget headerSection(StashpointListState state) {
     return SliverAppBar(
       expandedHeight: 300.0,
       backgroundColor: lightContainer,
@@ -123,7 +125,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
+                      const Text(
                         "Welcome!",
                         style: _headerTextStyle,
                       ),
@@ -142,23 +144,33 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
                     children: [
                       InkWell(
                         onTap: () async {
-                          List<DateTime>? dateTimeList =
+                          List<DateTime> dateTimeList =
                               await showOmniDateTimeRangePicker(
-                                  context: context,
-                                  theme: ThemeData(
+                                    context: context,
+                                    startInitialDate:
+                                        state.dropOff.toDateTime(),
+                                    endInitialDate: state.pickUp.toDateTime(
+                                        defaultDateTime: nextDayDateTime()),
+                                    theme: ThemeData(
                                       cardColor: lightContainer,
-                                      colorScheme: ColorScheme.light(
-                                          primary: primaryColor)));
+                                      colorScheme: const ColorScheme.light(
+                                          primary: primaryColor),
+                                    ),
+                                  ) ??
+                                  [];
+                          _bloc.add(SetDates(
+                              dropOff: dateTimeList[0],
+                              pickUp: dateTimeList[1]));
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "from Mar 3, 04:30 AM",
+                              "from ${state.dropOff.toFormat(outputFormat: uiDateFormat)}",
                               style: _subHeaderTextStyle,
                             ),
                             Text(
-                              "to Mar 3, 04:30 AM",
+                              "to ${state.pickUp.toFormat(defaultDateTime: nextDayDateTime(), outputFormat: uiDateFormat)}",
                               style: _subHeaderTextStyle,
                             ),
                           ],
@@ -172,27 +184,33 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
                           Row(
                             children: [
                               IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.remove_circle,
-                                    color: primaryColor,
-                                    size: 18,
-                                  )),
-                              Icon(
+                                onPressed: () {
+                                  _bloc.add(const DecreaseCapacity());
+                                },
+                                icon: const Icon(
+                                  Icons.remove_circle,
+                                  color: primaryColor,
+                                  size: 18,
+                                ),
+                              ),
+                              const Icon(
                                 Icons.luggage_outlined,
                                 color: primaryColor,
                               ),
                               Text(
-                                "2",
+                                state.capacity.toString(),
                                 style: _subHeaderTextStyle,
                               ),
                               IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.add_circle,
-                                    color: primaryColor,
-                                    size: 18,
-                                  ))
+                                onPressed: () {
+                                  _bloc.add(const IncreaseCapacity());
+                                },
+                                icon: const Icon(
+                                  Icons.add_circle,
+                                  color: primaryColor,
+                                  size: 18,
+                                ),
+                              )
                             ],
                           )
                         ],
@@ -239,7 +257,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
     );
   }
 
-  Widget listSection() {
+  Widget listSection(StashpointListState state) {
     return PagedListView<int, StashpointItem>(
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate(

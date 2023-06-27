@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:city_stasher_lite/data/city_stasher_repository.dart';
+import 'package:city_stasher_lite/presentation/shared/formatter.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_event.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_state.dart';
 import 'package:injectable/injectable.dart';
@@ -12,6 +13,9 @@ class StashpointListBloc
   final CityStasherRepository _repository;
   StashpointListBloc(this._repository) : super(const StashpointListState()) {
     on<GetStashpointList>(_getStashpointList);
+    on<IncreaseCapacity>(_increaseCapacity);
+    on<DecreaseCapacity>(_decreaseCapacity);
+    on<SetDates>(_setDates);
   }
 
   FutureOr<void> _getStashpointList(
@@ -22,9 +26,9 @@ class StashpointListBloc
     final result = await _repository.getStashpoints(
       active: true,
       availability: "all",
-      capacity: 1,
-      dropOff: "2023-06-25T18:00:00",
-      pickUp: "2023-06-25T19:00:00",
+      capacity: state.capacity,
+      dropOff: state.dropOff,
+      pickUp: state.pickUp,
       latitude: "-0.0810913",
       longtitude: "-0.0810913",
       page: event.page,
@@ -45,5 +49,34 @@ class StashpointListBloc
       isLastPage: !(result.hasNextPage ?? false),
       currentPage: result.currentPage ?? 0,
     ));
+  }
+
+  FutureOr<void> _increaseCapacity(
+      IncreaseCapacity event, Emitter<StashpointListState> emit) async {
+    emit(state.copyWith(
+      capacity: state.capacity + 1,
+      stashpointList: [],
+    ));
+    add(const GetStashpointList(page: 1));
+  }
+
+  FutureOr<void> _decreaseCapacity(
+      DecreaseCapacity event, Emitter<StashpointListState> emit) async {
+    if (state.capacity > 1) {
+      emit(state.copyWith(
+        capacity: state.capacity - 1,
+        stashpointList: [],
+      ));
+      add(const GetStashpointList(page: 1));
+    }
+  }
+
+  FutureOr<void> _setDates(
+      SetDates event, Emitter<StashpointListState> emit) async {
+    emit(state.copyWith(
+        dropOff: event.dropOff.toDateString(),
+        pickUp: event.pickUp.toDateString(),
+        stashpointList: []));
+    add(const GetStashpointList(page: 1));
   }
 }
