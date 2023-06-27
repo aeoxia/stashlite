@@ -16,8 +16,8 @@ abstract class StasherService {
       @Query("capacity") int capacity,
       @Query("dropoff") String dropOff,
       @Query("pickup") String pickUp,
-      @Query("lat") String latitude,
-      @Query("long") String longtitude,
+      @Query("lat") double latitude,
+      @Query("long") double longtitude,
       @Query("page") int page,
       @Query("per_page") int itemCount,
       @Query("sort") String sort);

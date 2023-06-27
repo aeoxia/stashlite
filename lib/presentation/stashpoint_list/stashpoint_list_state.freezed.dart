@@ -24,10 +24,13 @@ mixin _$StashpointListState {
   String get longtitude => throw _privateConstructorUsedError;
   String get latitude => throw _privateConstructorUsedError;
   String get sort => throw _privateConstructorUsedError;
-  String get currentLocationName => throw _privateConstructorUsedError;
   int get selectedSort => throw _privateConstructorUsedError;
   int get currentPage => throw _privateConstructorUsedError;
   bool get isLastPage => throw _privateConstructorUsedError;
+  LocationItem? get selectedLocation => throw _privateConstructorUsedError;
+  bool? get isLocationServiceEnabled => throw _privateConstructorUsedError;
+  LocationPermission? get currentLocationPermission =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $StashpointListStateCopyWith<StashpointListState> get copyWith =>
@@ -49,10 +52,12 @@ abstract class $StashpointListStateCopyWith<$Res> {
       String longtitude,
       String latitude,
       String sort,
-      String currentLocationName,
       int selectedSort,
       int currentPage,
-      bool isLastPage});
+      bool isLastPage,
+      LocationItem? selectedLocation,
+      bool? isLocationServiceEnabled,
+      LocationPermission? currentLocationPermission});
 }
 
 /// @nodoc
@@ -76,10 +81,12 @@ class _$StashpointListStateCopyWithImpl<$Res, $Val extends StashpointListState>
     Object? longtitude = null,
     Object? latitude = null,
     Object? sort = null,
-    Object? currentLocationName = null,
     Object? selectedSort = null,
     Object? currentPage = null,
     Object? isLastPage = null,
+    Object? selectedLocation = freezed,
+    Object? isLocationServiceEnabled = freezed,
+    Object? currentLocationPermission = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -114,10 +121,6 @@ class _$StashpointListStateCopyWithImpl<$Res, $Val extends StashpointListState>
           ? _value.sort
           : sort // ignore: cast_nullable_to_non_nullable
               as String,
-      currentLocationName: null == currentLocationName
-          ? _value.currentLocationName
-          : currentLocationName // ignore: cast_nullable_to_non_nullable
-              as String,
       selectedSort: null == selectedSort
           ? _value.selectedSort
           : selectedSort // ignore: cast_nullable_to_non_nullable
@@ -130,6 +133,18 @@ class _$StashpointListStateCopyWithImpl<$Res, $Val extends StashpointListState>
           ? _value.isLastPage
           : isLastPage // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectedLocation: freezed == selectedLocation
+          ? _value.selectedLocation
+          : selectedLocation // ignore: cast_nullable_to_non_nullable
+              as LocationItem?,
+      isLocationServiceEnabled: freezed == isLocationServiceEnabled
+          ? _value.isLocationServiceEnabled
+          : isLocationServiceEnabled // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      currentLocationPermission: freezed == currentLocationPermission
+          ? _value.currentLocationPermission
+          : currentLocationPermission // ignore: cast_nullable_to_non_nullable
+              as LocationPermission?,
     ) as $Val);
   }
 }
@@ -151,10 +166,12 @@ abstract class _$$_StashpointListStateCopyWith<$Res>
       String longtitude,
       String latitude,
       String sort,
-      String currentLocationName,
       int selectedSort,
       int currentPage,
-      bool isLastPage});
+      bool isLastPage,
+      LocationItem? selectedLocation,
+      bool? isLocationServiceEnabled,
+      LocationPermission? currentLocationPermission});
 }
 
 /// @nodoc
@@ -176,10 +193,12 @@ class __$$_StashpointListStateCopyWithImpl<$Res>
     Object? longtitude = null,
     Object? latitude = null,
     Object? sort = null,
-    Object? currentLocationName = null,
     Object? selectedSort = null,
     Object? currentPage = null,
     Object? isLastPage = null,
+    Object? selectedLocation = freezed,
+    Object? isLocationServiceEnabled = freezed,
+    Object? currentLocationPermission = freezed,
   }) {
     return _then(_$_StashpointListState(
       isLoading: null == isLoading
@@ -214,10 +233,6 @@ class __$$_StashpointListStateCopyWithImpl<$Res>
           ? _value.sort
           : sort // ignore: cast_nullable_to_non_nullable
               as String,
-      currentLocationName: null == currentLocationName
-          ? _value.currentLocationName
-          : currentLocationName // ignore: cast_nullable_to_non_nullable
-              as String,
       selectedSort: null == selectedSort
           ? _value.selectedSort
           : selectedSort // ignore: cast_nullable_to_non_nullable
@@ -230,6 +245,18 @@ class __$$_StashpointListStateCopyWithImpl<$Res>
           ? _value.isLastPage
           : isLastPage // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectedLocation: freezed == selectedLocation
+          ? _value.selectedLocation
+          : selectedLocation // ignore: cast_nullable_to_non_nullable
+              as LocationItem?,
+      isLocationServiceEnabled: freezed == isLocationServiceEnabled
+          ? _value.isLocationServiceEnabled
+          : isLocationServiceEnabled // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      currentLocationPermission: freezed == currentLocationPermission
+          ? _value.currentLocationPermission
+          : currentLocationPermission // ignore: cast_nullable_to_non_nullable
+              as LocationPermission?,
     ));
   }
 }
@@ -246,10 +273,12 @@ class _$_StashpointListState implements _StashpointListState {
       this.longtitude = "",
       this.latitude = "",
       this.sort = "",
-      this.currentLocationName = "",
       this.selectedSort = 0,
       this.currentPage = 0,
-      this.isLastPage = false})
+      this.isLastPage = false,
+      this.selectedLocation = null,
+      this.isLocationServiceEnabled = null,
+      this.currentLocationPermission = null})
       : _stashpointList = stashpointList;
 
   @override
@@ -284,9 +313,6 @@ class _$_StashpointListState implements _StashpointListState {
   final String sort;
   @override
   @JsonKey()
-  final String currentLocationName;
-  @override
-  @JsonKey()
   final int selectedSort;
   @override
   @JsonKey()
@@ -294,10 +320,19 @@ class _$_StashpointListState implements _StashpointListState {
   @override
   @JsonKey()
   final bool isLastPage;
+  @override
+  @JsonKey()
+  final LocationItem? selectedLocation;
+  @override
+  @JsonKey()
+  final bool? isLocationServiceEnabled;
+  @override
+  @JsonKey()
+  final LocationPermission? currentLocationPermission;
 
   @override
   String toString() {
-    return 'StashpointListState(isLoading: $isLoading, stashpointList: $stashpointList, capacity: $capacity, dropOff: $dropOff, pickUp: $pickUp, longtitude: $longtitude, latitude: $latitude, sort: $sort, currentLocationName: $currentLocationName, selectedSort: $selectedSort, currentPage: $currentPage, isLastPage: $isLastPage)';
+    return 'StashpointListState(isLoading: $isLoading, stashpointList: $stashpointList, capacity: $capacity, dropOff: $dropOff, pickUp: $pickUp, longtitude: $longtitude, latitude: $latitude, sort: $sort, selectedSort: $selectedSort, currentPage: $currentPage, isLastPage: $isLastPage, selectedLocation: $selectedLocation, isLocationServiceEnabled: $isLocationServiceEnabled, currentLocationPermission: $currentLocationPermission)';
   }
 
   @override
@@ -318,14 +353,20 @@ class _$_StashpointListState implements _StashpointListState {
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.sort, sort) || other.sort == sort) &&
-            (identical(other.currentLocationName, currentLocationName) ||
-                other.currentLocationName == currentLocationName) &&
             (identical(other.selectedSort, selectedSort) ||
                 other.selectedSort == selectedSort) &&
             (identical(other.currentPage, currentPage) ||
                 other.currentPage == currentPage) &&
             (identical(other.isLastPage, isLastPage) ||
-                other.isLastPage == isLastPage));
+                other.isLastPage == isLastPage) &&
+            (identical(other.selectedLocation, selectedLocation) ||
+                other.selectedLocation == selectedLocation) &&
+            (identical(
+                    other.isLocationServiceEnabled, isLocationServiceEnabled) ||
+                other.isLocationServiceEnabled == isLocationServiceEnabled) &&
+            (identical(other.currentLocationPermission,
+                    currentLocationPermission) ||
+                other.currentLocationPermission == currentLocationPermission));
   }
 
   @override
@@ -339,10 +380,12 @@ class _$_StashpointListState implements _StashpointListState {
       longtitude,
       latitude,
       sort,
-      currentLocationName,
       selectedSort,
       currentPage,
-      isLastPage);
+      isLastPage,
+      selectedLocation,
+      isLocationServiceEnabled,
+      currentLocationPermission);
 
   @JsonKey(ignore: true)
   @override
@@ -354,18 +397,21 @@ class _$_StashpointListState implements _StashpointListState {
 
 abstract class _StashpointListState implements StashpointListState {
   const factory _StashpointListState(
-      {final bool isLoading,
-      final List<StashpointItem> stashpointList,
-      final int capacity,
-      final String dropOff,
-      final String pickUp,
-      final String longtitude,
-      final String latitude,
-      final String sort,
-      final String currentLocationName,
-      final int selectedSort,
-      final int currentPage,
-      final bool isLastPage}) = _$_StashpointListState;
+          {final bool isLoading,
+          final List<StashpointItem> stashpointList,
+          final int capacity,
+          final String dropOff,
+          final String pickUp,
+          final String longtitude,
+          final String latitude,
+          final String sort,
+          final int selectedSort,
+          final int currentPage,
+          final bool isLastPage,
+          final LocationItem? selectedLocation,
+          final bool? isLocationServiceEnabled,
+          final LocationPermission? currentLocationPermission}) =
+      _$_StashpointListState;
 
   @override
   bool get isLoading;
@@ -384,13 +430,17 @@ abstract class _StashpointListState implements StashpointListState {
   @override
   String get sort;
   @override
-  String get currentLocationName;
-  @override
   int get selectedSort;
   @override
   int get currentPage;
   @override
   bool get isLastPage;
+  @override
+  LocationItem? get selectedLocation;
+  @override
+  bool? get isLocationServiceEnabled;
+  @override
+  LocationPermission? get currentLocationPermission;
   @override
   @JsonKey(ignore: true)
   _$$_StashpointListStateCopyWith<_$_StashpointListState> get copyWith =>

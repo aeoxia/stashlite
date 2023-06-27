@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:geolocator/geolocator.dart';
 part 'stashpoint_list_state.freezed.dart';
 
 @freezed
@@ -12,10 +13,12 @@ class StashpointListState with _$StashpointListState {
     @Default("") String longtitude,
     @Default("") String latitude,
     @Default("") String sort,
-    @Default("") String currentLocationName,
     @Default(0) int selectedSort,
     @Default(0) int currentPage,
     @Default(false) bool isLastPage,
+    @Default(null) LocationItem? selectedLocation,
+    @Default(null) bool? isLocationServiceEnabled,
+    @Default(null) LocationPermission? currentLocationPermission,
   }) = _StashpointListState;
 }
 
@@ -39,3 +42,11 @@ class StashpointItem {
 }
 
 Map<int, String> sortFilter = {0: "distance", 1: "rating"};
+
+class LocationItem {
+  final String name;
+  final double latitude;
+  final double longitude;
+
+  LocationItem(this.name, this.latitude, this.longitude);
+}

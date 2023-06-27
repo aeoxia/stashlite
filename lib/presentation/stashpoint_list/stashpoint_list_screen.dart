@@ -1,9 +1,12 @@
+import 'dart:ffi';
+
 import 'package:city_stasher_lite/di.dart';
 import 'package:city_stasher_lite/presentation/shared/formatter.dart';
 import 'package:city_stasher_lite/presentation/shared/page_loader.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_bloc.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_event.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_state.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
@@ -62,11 +65,30 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _bloc.add(GetStashpointList(page: pageKey + 1));
-    });
-
+    initialize();
     super.initState();
+  }
+
+  void initialize() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) async {
+        final isAllowed = await checkLocationPermission(
+          onDisabled: () => showSnackBar(
+              'Location services are disabled. Please enable the services'),
+          onDenied: () => showSnackBar('Location permissions are denied'),
+          onDeniedForever: () => showSnackBar(
+              'Location permissions are permanently denied, we cannot request permissions.'),
+        );
+
+        if (isAllowed) {
+          _bloc.add(const Initialize());
+
+          _pagingController.addPageRequestListener((pageKey) {
+            _bloc.add(GetStashpointList(page: pageKey + 1));
+          });
+        }
+      },
+    );
   }
 
   @override
@@ -95,6 +117,40 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
     } catch (error) {
       _pagingController.error = error;
     }
+  }
+
+  Future<bool> checkLocationPermission({
+    required Function() onDisabled,
+    required Function() onDenied,
+    required Function() onDeniedForever,
+  }) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      onDisabled();
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        onDenied();
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      onDeniedForever();
+      return false;
+    }
+    return true;
+  }
+
+  void showSnackBar(String message) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   Widget blocBuilder() {
@@ -271,7 +327,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
               textStyle: MaterialStateProperty.resolveWith((_) {
                 return _searchTextStyle;
               }),
-              hintText: "Current Location",
+              hintText: state.selectedLocation?.name ?? "Search...",
               backgroundColor: MaterialStateProperty.all(primaryColor),
             ),
             DropdownButtonHideUnderline(

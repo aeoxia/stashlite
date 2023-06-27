@@ -4,6 +4,7 @@ import 'package:city_stasher_lite/data/city_stasher_repository.dart';
 import 'package:city_stasher_lite/presentation/shared/formatter.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_event.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_state.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:injectable/injectable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,15 +13,34 @@ class StashpointListBloc
     extends Bloc<StashpointListEvent, StashpointListState> {
   final CityStasherRepository _repository;
   StashpointListBloc(this._repository) : super(const StashpointListState()) {
+    on<Initialize>(_initialize);
     on<GetStashpointList>(_getStashpointList);
     on<IncreaseCapacity>(_increaseCapacity);
     on<DecreaseCapacity>(_decreaseCapacity);
     on<SetDates>(_setDates);
     on<SortStashpointList>(_sortStashpointList);
+    on<InputAddress>(_inputAddress);
+    on<SelectLocation>(_selectLocation);
+  }
+
+  FutureOr<void> _initialize(
+      Initialize event, Emitter<StashpointListState> emit) async {
+    final result = await _repository.getCurrentLocation();
+
+    emit(state.copyWith(
+        selectedLocation: LocationItem(
+      "Current Location",
+      result.latitude,
+      result.longitude,
+    )));
+
+    add(const GetStashpointList(page: 1));
   }
 
   FutureOr<void> _getStashpointList(
       GetStashpointList event, Emitter<StashpointListState> emit) async {
+    if (state.selectedLocation == null) return;
+
     if (state.stashpointList.isEmpty) {
       emit(state.copyWith(isLoading: true));
     }
@@ -30,8 +50,8 @@ class StashpointListBloc
       capacity: state.capacity,
       dropOff: state.dropOff,
       pickUp: state.pickUp,
-      latitude: "-0.0810913",
-      longtitude: "-0.0810913",
+      latitude: state.selectedLocation?.latitude ?? 0.0, //Test: -0.0810913
+      longtitude: state.selectedLocation?.longitude ?? 0.0, //Test: -0.0810913
       page: event.page,
       itemCount: 20,
       sort: sortFilter[state.selectedSort]!,
@@ -101,4 +121,12 @@ class StashpointListBloc
     ));
     add(const GetStashpointList(page: 1));
   }
+
+  FutureOr<void> _inputAddress(
+      InputAddress event, Emitter<StashpointListState> emit) async {
+    final result = await _repository.getLocation(event.address);
+  }
+
+  FutureOr<void> _selectLocation(
+      SelectLocation event, Emitter<StashpointListState> emit) async {}
 }

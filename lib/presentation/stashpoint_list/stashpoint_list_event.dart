@@ -28,3 +28,19 @@ class SetDates extends StashpointListEvent {
 
   const SetDates({required this.dropOff, required this.pickUp});
 }
+
+class InputAddress extends StashpointListEvent {
+  final String address;
+
+  InputAddress(this.address);
+}
+
+class SelectLocation extends StashpointListEvent {
+  final int index;
+
+  SelectLocation(this.index);
+}
+
+class Initialize extends StashpointListEvent {
+  const Initialize();
+}
