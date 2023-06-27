@@ -37,12 +37,24 @@ class StashpointListBloc
       sort: sortFilter[state.selectedSort]!,
     );
 
-    final stashpointList = (result.items ?? [])
-        .map((item) => StashpointItem(
-              item.id ?? "",
-              item.name ?? "",
-            ))
-        .toList();
+    final stashpointList = (result.items ?? []).map((item) {
+      final imageList = item.imageList ?? [];
+      final symbol = item.priceStructure?.symbol ?? "";
+      final firstDayCost = item.priceStructure?.firstDay ?? "";
+      final extraDayCost = item.priceStructure?.extraDay ?? "";
+      final showOnePrice = firstDayCost == extraDayCost;
+      return StashpointItem(
+        id: item.id ?? "",
+        name: item.name ?? "",
+        image: imageList.isEmpty == true ? "" : imageList.first,
+        address: item.address ?? "",
+        rating: item.rating.toString(),
+        isAlwaysOpen: item.isAlwaysOpen ?? false,
+        price: showOnePrice
+            ? "$symbol$firstDayCost"
+            : "$symbol$firstDayCost - $symbol$extraDayCost",
+      );
+    }).toList();
 
     emit(state.copyWith(
       isLoading: false,

@@ -32,6 +32,13 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
     color: Colors.black,
   );
 
+  static const _itemHeaderTextStyle = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    color: Colors.black,
+  );
+
   static const _subHeaderTextStyle = TextStyle(
     fontFamily: 'Montserrat',
     fontSize: 16,
@@ -41,7 +48,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
 
   static const _searchTextStyle = TextStyle(
     fontFamily: 'Montserrat',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: FontWeight.w700,
     color: Colors.white,
   );
@@ -50,7 +57,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
     fontFamily: 'Montserrat',
     fontSize: 16,
     fontWeight: FontWeight.w700,
-    color: Colors.black,
+    color: Color.fromARGB(255, 59, 59, 59),
   );
 
   @override
@@ -297,11 +304,91 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
           ),
         ),
         itemBuilder: (context, item, index) {
-          return Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(item.name),
-          );
+          return stashpointItem(item);
         },
+      ),
+    );
+  }
+
+  Widget stashpointItem(StashpointItem item) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  item.image,
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.broken_image_rounded,
+                      size: 120,
+                    );
+                  },
+                ),
+              ),
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.name,
+                          style: _itemHeaderTextStyle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          item.address,
+                          style: _subHeaderTextStyle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          item.price,
+                          style: _descriptionTextStyle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Visibility(
+                            visible: item.isAlwaysOpen,
+                            child: SvgPicture.asset(
+                                "assets/images/twentyfour_seven.svg")),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(item.rating),
+                        const Icon(
+                          Icons.star_rounded,
+                          size: 16,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ))
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          )
+        ],
       ),
     );
   }

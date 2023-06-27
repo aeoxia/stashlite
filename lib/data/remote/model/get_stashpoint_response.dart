@@ -28,9 +28,48 @@ class GetStashpointItem {
   double? rating;
   @JsonKey(name: "location_name")
   String? name;
+  @JsonKey(name: "photos")
+  List<String>? imageList;
+  @JsonKey(name: "open_twentyfour_seven")
+  bool? isAlwaysOpen;
+  @JsonKey(name: "pricing_structure")
+  GetStashpointItemPricing? priceStructure;
 
-  GetStashpointItem({this.id, this.address, this.rating, this.name});
+  GetStashpointItem({
+    this.id,
+    this.address,
+    this.rating,
+    this.name,
+    this.imageList,
+    this.isAlwaysOpen,
+    this.priceStructure,
+  });
 
   factory GetStashpointItem.fromJson(JsonObject json) =>
       _$GetStashpointItemFromJson(json);
+}
+
+@JsonSerializable()
+class GetStashpointItemPricing {
+  @JsonKey(name: "first_day_cost")
+  double? firstDay;
+  @JsonKey(name: "ccy_symbol")
+  String? symbol;
+  @JsonKey(name: "ccy_minor_in_major")
+  double? minorInMajor;
+  @JsonKey(name: "extra_day_cost")
+  double? extraDay;
+  @JsonKey(name: "ccy")
+  String? symbolName;
+
+  GetStashpointItemPricing({
+    this.firstDay,
+    this.symbol,
+    this.minorInMajor,
+    this.extraDay,
+    this.symbolName,
+  });
+
+  factory GetStashpointItemPricing.fromJson(JsonObject json) =>
+      _$GetStashpointItemPricingFromJson(json);
 }
