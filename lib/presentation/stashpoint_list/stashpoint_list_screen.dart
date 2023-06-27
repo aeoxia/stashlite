@@ -108,170 +108,180 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
 
   Widget headerSection(StashpointListState state) {
     return SliverAppBar(
-      expandedHeight: 370.0,
+      expandedHeight: 350.0,
       backgroundColor: lightContainer,
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.pin,
-        background: Center(
-          child: Container(
-            color: lightContainer,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 48),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const Text(
-                        "Welcome!",
-                        style: _headerTextStyle,
-                      ),
-                      SvgPicture.asset(
-                        'assets/images/travelers.svg',
-                        height: 120,
-                        fit: BoxFit.scaleDown,
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: () async {
-                          List<DateTime> dateTimeList =
-                              await showOmniDateTimeRangePicker(
-                                    context: context,
-                                    startInitialDate:
-                                        state.dropOff.toDateTime(),
-                                    endInitialDate: state.pickUp.toDateTime(
-                                        defaultDateTime: nextDayDateTime()),
-                                    theme: ThemeData(
-                                      cardColor: lightContainer,
-                                      colorScheme: const ColorScheme.light(
-                                          primary: primaryColor),
-                                    ),
-                                  ) ??
-                                  [];
-                          _bloc.add(SetDates(
-                              dropOff: dateTimeList[0],
-                              pickUp: dateTimeList[1]));
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "from ${state.dropOff.toFormat(outputFormat: uiDateFormat)}",
-                              style: _subHeaderTextStyle,
-                            ),
-                            Text(
-                              "to ${state.pickUp.toFormat(defaultDateTime: nextDayDateTime(), outputFormat: uiDateFormat)}",
-                              style: _subHeaderTextStyle,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  _bloc.add(const DecreaseCapacity());
-                                },
-                                icon: const Icon(
-                                  Icons.remove_circle,
-                                  color: primaryColor,
-                                  size: 18,
-                                ),
-                              ),
-                              const Icon(
-                                Icons.luggage_outlined,
-                                color: primaryColor,
-                              ),
-                              Text(
-                                state.capacity.toString(),
-                                style: _subHeaderTextStyle,
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  _bloc.add(const IncreaseCapacity());
-                                },
-                                icon: const Icon(
-                                  Icons.add_circle,
-                                  color: primaryColor,
-                                  size: 18,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-      bottom: AppBar(
-        flexibleSpace: Padding(
+      flexibleSpace: infoCard(state),
+      bottom: appBar(state),
+    );
+  }
+
+  Widget infoCard(StashpointListState state) {
+    return FlexibleSpaceBar(
+      collapseMode: CollapseMode.pin,
+      background: Container(
+        color: lightContainer,
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SearchBar(
-                leading: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(
-                    Icons.location_city,
-                    color: Colors.white,
-                  ),
-                ),
-                trailing: const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Icon(
-                      Icons.my_location,
-                      color: Colors.white,
-                    ),
-                  )
-                ],
-                textStyle: MaterialStateProperty.resolveWith((_) {
-                  return _searchTextStyle;
-                }),
-                hintText: "Current Location",
-                backgroundColor: MaterialStateProperty.all(primaryColor),
+              const SizedBox(height: 48),
+              header(),
+              const SizedBox(
+                height: 12,
               ),
-              DropdownButtonHideUnderline(
-                child: DropdownButton(
-                  value: state.selectedSort,
-                  items: sortFilter.entries.map((MapEntry<int, String> entry) {
-                    return DropdownMenuItem<int>(
-                      value: entry.key,
-                      child: Text(entry.value),
-                    );
-                  }).toList(),
-                  onChanged: (selection) {
-                    _bloc.add(SortStashpointList(index: selection ?? 0));
-                  },
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  dates(state),
+                  capacity(state),
+                ],
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget header() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        const Text(
+          "Welcome!",
+          style: _headerTextStyle,
+        ),
+        SvgPicture.asset(
+          'assets/images/travelers.svg',
+          height: 120,
+          fit: BoxFit.scaleDown,
+        )
+      ],
+    );
+  }
+
+  Widget dates(StashpointListState state) {
+    return InkWell(
+      onTap: () async {
+        List<DateTime> dateTimeList = await showOmniDateTimeRangePicker(
+              context: context,
+              startInitialDate: state.dropOff.toDateTime(),
+              endInitialDate:
+                  state.pickUp.toDateTime(defaultDateTime: nextDayDateTime()),
+              theme: ThemeData(
+                cardColor: lightContainer,
+                colorScheme: const ColorScheme.light(primary: primaryColor),
+              ),
+            ) ??
+            [];
+        _bloc.add(SetDates(dropOff: dateTimeList[0], pickUp: dateTimeList[1]));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "from ${state.dropOff.toFormat(outputFormat: uiDateFormat)}",
+            style: _subHeaderTextStyle,
+          ),
+          Text(
+            "to ${state.pickUp.toFormat(defaultDateTime: nextDayDateTime(), outputFormat: uiDateFormat)}",
+            style: _subHeaderTextStyle,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget capacity(StashpointListState state) {
+    return Row(
+      children: [
+        const SizedBox(
+          width: 5,
+        ),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                _bloc.add(const DecreaseCapacity());
+              },
+              icon: const Icon(
+                Icons.remove_circle,
+                color: primaryColor,
+                size: 18,
+              ),
+            ),
+            const Icon(
+              Icons.luggage_outlined,
+              color: primaryColor,
+            ),
+            Text(
+              state.capacity.toString(),
+              style: _subHeaderTextStyle,
+            ),
+            IconButton(
+              onPressed: () {
+                _bloc.add(const IncreaseCapacity());
+              },
+              icon: const Icon(
+                Icons.add_circle,
+                color: primaryColor,
+                size: 18,
+              ),
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  PreferredSizeWidget appBar(StashpointListState state) {
+    return AppBar(
+      flexibleSpace: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SearchBar(
+              leading: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Icon(
+                  Icons.location_city,
+                  color: Colors.white,
+                ),
+              ),
+              trailing: const [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Icon(
+                    Icons.my_location,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+              textStyle: MaterialStateProperty.resolveWith((_) {
+                return _searchTextStyle;
+              }),
+              hintText: "Current Location",
+              backgroundColor: MaterialStateProperty.all(primaryColor),
+            ),
+            DropdownButtonHideUnderline(
+              child: DropdownButton(
+                value: state.selectedSort,
+                items: sortFilter.entries.map((MapEntry<int, String> entry) {
+                  return DropdownMenuItem<int>(
+                    value: entry.key,
+                    child: Text(entry.value),
+                  );
+                }).toList(),
+                onChanged: (selection) {
+                  _bloc.add(SortStashpointList(index: selection ?? 0));
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
