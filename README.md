@@ -1,6 +1,6 @@
 # stasher_lite
 
-A sample project showcasing the use Stasher API. This includes:
+A sample project showcasing the use of Stasher API. This includes:
 
 - Geocoding
 - Geolocator
@@ -29,7 +29,7 @@ After downloading our tools here are the following steps you need to do:
 3. Go to File -> Open -> (Folder where you stored the code from step 1)
 4. Select -> "Yes, I trust the authors"
 5. Open Explore Panel on the left side
-6. Right click on any open space and select open integrated terminal
+6. Right click Explore Panel and select open integrated terminal
 7. Type the following commands:
    - flutter pub get
    - open -a simulator
