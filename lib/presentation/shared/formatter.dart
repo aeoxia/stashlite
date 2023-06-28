@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 const defaultDateFormat = "yyyy-MM-dd'T'HH:mm:ss";
 const uiDateFormat = "MMM d, hh:mm a";
 
-extension DateStringConverter on String {
+extension DateStringConverter on String? {
   String toFormat(
       {DateTime? defaultDateTime,
       String inputFormat = defaultDateFormat,
@@ -11,7 +11,7 @@ extension DateStringConverter on String {
     final inputFormatter = DateFormat(inputFormat);
     final outputFormatter = DateFormat(outputFormat);
     try {
-      final dateTime = inputFormatter.parse(this);
+      final dateTime = inputFormatter.parse(this!);
       final dateTimeString = outputFormatter.format(dateTime);
       return dateTimeString;
     } catch (e) {
@@ -23,7 +23,7 @@ extension DateStringConverter on String {
       {DateTime? defaultDateTime, String outputFormat = defaultDateFormat}) {
     try {
       final outputFormatter = DateFormat(outputFormat);
-      return outputFormatter.parse(this);
+      return outputFormatter.parse(this!);
     } catch (e) {
       return defaultDateTime ?? currentDateTime();
     }

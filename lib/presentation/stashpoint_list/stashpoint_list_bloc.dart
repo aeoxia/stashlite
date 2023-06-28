@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:city_stasher_lite/data/city_stasher_repository.dart';
 import 'package:city_stasher_lite/presentation/shared/formatter.dart';
@@ -11,8 +12,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class StashpointListBloc
     extends Bloc<StashpointListEvent, StashpointListState> {
   final CityStasherRepository _repository;
-  StashpointListBloc(this._repository) : super(const StashpointListState()) {
-    on<GetCurrentLocation>(_initialize);
+  StashpointListBloc(this._repository)
+      : super(const StashpointListState(
+          isLoading: true,
+          stashpointList: [],
+          capacity: 1,
+          dropOff: "",
+          pickUp: "",
+          sort: "",
+          selectedSort: 0,
+          currentPage: 1,
+          isLastPage: false,
+          selectedLocation: null,
+        )) {
+    on<Initialize>(_initialize);
     on<GetStashpointList>(_getStashpointList);
     on<IncreaseCapacity>(_increaseCapacity);
     on<DecreaseCapacity>(_decreaseCapacity);
@@ -22,15 +35,23 @@ class StashpointListBloc
   }
 
   FutureOr<void> _initialize(
-      GetCurrentLocation event, Emitter<StashpointListState> emit) async {
+      Initialize event, Emitter<StashpointListState> emit) async {
     final result = await _repository.getCurrentLocation();
 
     emit(state.copyWith(
-        selectedLocation: LocationItem(
-      "Current Location",
-      result.latitude,
-      result.longitude,
-    )));
+      selectedLocation: LocationItem(
+        "Current Location",
+        result.latitude,
+        result.longitude,
+      ),
+      stashpointList: [],
+      capacity: 1,
+      dropOff: nextDayDateTime().toDateString(),
+      pickUp: nextDayDateTime().toDateString(),
+      sort: "distance",
+      selectedSort: 0,
+      currentPage: 1,
+    ));
 
     add(const GetStashpointList(page: 1));
   }
@@ -51,9 +72,11 @@ class StashpointListBloc
       latitude: state.selectedLocation?.latitude ?? 0.0, //Test: -0.0810913
       longtitude: state.selectedLocation?.longitude ?? 0.0, //Test: -0.0810913
       page: event.page,
-      itemCount: 20,
+      itemCount: 10,
       sort: sortFilter[state.selectedSort]!,
     );
+
+    log('data: $result');
 
     final stashpointList = (result.items ?? []).map((item) {
       final imageList = item.imageList ?? [];

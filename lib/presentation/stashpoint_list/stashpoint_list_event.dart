@@ -43,6 +43,6 @@ class SelectLocation extends StashpointListEvent {
   SelectLocation(this.name, this.latitude, this.longitude);
 }
 
-class GetCurrentLocation extends StashpointListEvent {
-  const GetCurrentLocation();
+class Initialize extends StashpointListEvent {
+  const Initialize();
 }

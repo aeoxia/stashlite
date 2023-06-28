@@ -9,7 +9,7 @@ class StashpointListState with _$StashpointListState {
     @Default(1) int capacity,
     @Default("") String dropOff,
     @Default("") String pickUp,
-    @Default("") String sort,
+    @Default("distance") String sort,
     @Default(0) int selectedSort,
     @Default(0) int currentPage,
     @Default(false) bool isLastPage,

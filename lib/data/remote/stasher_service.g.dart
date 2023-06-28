@@ -41,7 +41,7 @@ class _StasherService implements StasherService {
       r'dropoff': dropOff,
       r'pickup': pickUp,
       r'lat': latitude,
-      r'long': longtitude,
+      r'lng': longtitude,
       r'page': page,
       r'per_page': itemCount,
       r'sort': sort,

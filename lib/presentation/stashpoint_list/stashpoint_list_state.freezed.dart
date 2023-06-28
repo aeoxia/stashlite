@@ -217,7 +217,7 @@ class _$_StashpointListState implements _StashpointListState {
       this.capacity = 1,
       this.dropOff = "",
       this.pickUp = "",
-      this.sort = "",
+      this.sort = "distance",
       this.selectedSort = 0,
       this.currentPage = 0,
       this.isLastPage = false,

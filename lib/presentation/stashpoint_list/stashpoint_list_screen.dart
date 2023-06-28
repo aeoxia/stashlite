@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:city_stasher_lite/di.dart';
 import 'package:city_stasher_lite/presentation/shared/formatter.dart';
 import 'package:city_stasher_lite/presentation/shared/page_loader.dart';
@@ -82,7 +80,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
         );
 
         if (isAllowed) {
-          _bloc.add(const GetCurrentLocation());
+          _bloc.add(const Initialize());
 
           _pagingController.addPageRequestListener((pageKey) {
             _bloc.add(GetStashpointList(page: pageKey + 1));
@@ -110,10 +108,15 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
   void handleEventChange(
       BuildContext context, StashpointListState state) async {
     try {
-      if (state.isLastPage) {
-        _pagingController.appendLastPage(state.stashpointList);
+      if (state.currentPage == 1 &&
+          _pagingController.itemList?.isNotEmpty == true) {
+        _pagingController.itemList = state.stashpointList;
       } else {
-        _pagingController.appendPage(state.stashpointList, state.currentPage);
+        if (state.isLastPage) {
+          _pagingController.appendLastPage(state.stashpointList);
+        } else {
+          _pagingController.appendPage(state.stashpointList, state.currentPage);
+        }
       }
     } catch (error) {
       _pagingController.error = error;
@@ -232,8 +235,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
         List<DateTime> dateTimeList = await showOmniDateTimeRangePicker(
               context: context,
               startInitialDate: state.dropOff.toDateTime(),
-              endInitialDate:
-                  state.pickUp.toDateTime(defaultDateTime: nextDayDateTime()),
+              endInitialDate: state.pickUp.toDateTime(),
               theme: ThemeData(
                 cardColor: lightContainer,
                 colorScheme: const ColorScheme.light(primary: primaryColor),
@@ -250,7 +252,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
             style: _subHeaderTextStyle,
           ),
           Text(
-            "to ${state.pickUp.toFormat(defaultDateTime: nextDayDateTime(), outputFormat: uiDateFormat)}",
+            "to ${state.pickUp.toFormat(outputFormat: uiDateFormat)}",
             style: _subHeaderTextStyle,
           ),
         ],
@@ -364,7 +366,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: IconButton(
                         onPressed: () {
-                          _bloc.add(const GetCurrentLocation());
+                          _bloc.add(const Initialize());
                         },
                         icon: const Icon(
                           Icons.my_location,
