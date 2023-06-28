@@ -29,18 +29,20 @@ class SetDates extends StashpointListEvent {
   const SetDates({required this.dropOff, required this.pickUp});
 }
 
-class InputAddress extends StashpointListEvent {
+class GetSuggestions extends StashpointListEvent {
   final String address;
 
-  InputAddress(this.address);
+  GetSuggestions(this.address);
 }
 
 class SelectLocation extends StashpointListEvent {
-  final int index;
+  final String name;
+  final double latitude;
+  final double longitude;
 
-  SelectLocation(this.index);
+  SelectLocation(this.name, this.latitude, this.longitude);
 }
 
-class Initialize extends StashpointListEvent {
-  const Initialize();
+class GetCurrentLocation extends StashpointListEvent {
+  const GetCurrentLocation();
 }

@@ -6,6 +6,7 @@ import 'package:city_stasher_lite/presentation/shared/page_loader.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_bloc.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_event.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_state.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_svg/svg.dart';
@@ -81,7 +82,7 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
         );
 
         if (isAllowed) {
-          _bloc.add(const Initialize());
+          _bloc.add(const GetCurrentLocation());
 
           _pagingController.addPageRequestListener((pageKey) {
             _bloc.add(GetStashpointList(page: pageKey + 1));
@@ -307,28 +308,71 @@ class _StashpointListScreenState extends State<StashpointListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SearchBar(
-              leading: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Icon(
-                  Icons.location_city,
-                  color: Colors.white,
-                ),
-              ),
-              trailing: const [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(
-                    Icons.my_location,
-                    color: Colors.white,
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              color: primaryColor,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(
+                      Icons.location_city,
+                      color: Colors.white,
+                    ),
                   ),
-                )
-              ],
-              textStyle: MaterialStateProperty.resolveWith((_) {
-                return _searchTextStyle;
-              }),
-              hintText: state.selectedLocation?.name ?? "Search...",
-              backgroundColor: MaterialStateProperty.all(primaryColor),
+                  Expanded(
+                    child: Stack(
+                      alignment: Alignment.centerLeft,
+                      children: [
+                        TypeAheadField(
+                          textFieldConfiguration: TextFieldConfiguration(
+                            style: _searchTextStyle,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText:
+                                    state.selectedLocation?.name ?? "Search..",
+                                hintStyle: _searchTextStyle),
+                          ),
+                          suggestionsCallback: (pattern) async {
+                            return await _bloc.getSuggestions(pattern);
+                          },
+                          itemBuilder: (context, suggestion) {
+                            return Padding(
+                              padding: const EdgeInsets.all(14),
+                              child: Text(
+                                suggestion.name,
+                                style: _descriptionTextStyle,
+                              ),
+                            );
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            _bloc.add(
+                              SelectLocation(
+                                suggestion.name,
+                                suggestion.latitude,
+                                suggestion.longitude,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: IconButton(
+                        onPressed: () {
+                          _bloc.add(const GetCurrentLocation());
+                        },
+                        icon: const Icon(
+                          Icons.my_location,
+                          color: Colors.white,
+                        )),
+                  )
+                ],
+              ),
             ),
             DropdownButtonHideUnderline(
               child: DropdownButton(

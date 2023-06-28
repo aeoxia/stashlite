@@ -4,7 +4,6 @@ import 'package:city_stasher_lite/data/city_stasher_repository.dart';
 import 'package:city_stasher_lite/presentation/shared/formatter.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_event.dart';
 import 'package:city_stasher_lite/presentation/stashpoint_list/stashpoint_list_state.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:injectable/injectable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,18 +12,17 @@ class StashpointListBloc
     extends Bloc<StashpointListEvent, StashpointListState> {
   final CityStasherRepository _repository;
   StashpointListBloc(this._repository) : super(const StashpointListState()) {
-    on<Initialize>(_initialize);
+    on<GetCurrentLocation>(_initialize);
     on<GetStashpointList>(_getStashpointList);
     on<IncreaseCapacity>(_increaseCapacity);
     on<DecreaseCapacity>(_decreaseCapacity);
     on<SetDates>(_setDates);
     on<SortStashpointList>(_sortStashpointList);
-    on<InputAddress>(_inputAddress);
     on<SelectLocation>(_selectLocation);
   }
 
   FutureOr<void> _initialize(
-      Initialize event, Emitter<StashpointListState> emit) async {
+      GetCurrentLocation event, Emitter<StashpointListState> emit) async {
     final result = await _repository.getCurrentLocation();
 
     emit(state.copyWith(
@@ -122,11 +120,21 @@ class StashpointListBloc
     add(const GetStashpointList(page: 1));
   }
 
-  FutureOr<void> _inputAddress(
-      InputAddress event, Emitter<StashpointListState> emit) async {
-    final result = await _repository.getLocation(event.address);
+  FutureOr<List<LocationItem>> getSuggestions(String address) async {
+    if (address.isEmpty) return [];
+    return _repository.getLocations(address);
   }
 
   FutureOr<void> _selectLocation(
-      SelectLocation event, Emitter<StashpointListState> emit) async {}
+      SelectLocation event, Emitter<StashpointListState> emit) async {
+    emit(state.copyWith(
+      selectedLocation: LocationItem(
+        event.name,
+        event.latitude,
+        event.longitude,
+      ),
+      stashpointList: [],
+    ));
+    add(const GetStashpointList(page: 1));
+  }
 }
