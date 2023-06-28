@@ -30,8 +30,8 @@ After downloading our tools here are the following steps you need to do:
 4. Select -> "Yes, I trust the authors"
 5. Open Explore Panel on the left side
 6. Right click on any open space and select open integrated terminal
-7. Type the following commands
-   -flutter pub get
-   -open -a simulator
-   -flutter run
+7. Type the following commands:
+   - flutter pub get
+   - open -a simulator
+   - flutter run
 8. You should see an iOS Simulator open that runs the app. Have Fun!
