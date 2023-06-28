@@ -1,16 +1,37 @@
-# city_stasher_lite
+# stasher_lite
 
-A new Flutter project.
+A sample project showcasing the use Stasher API. This includes:
+
+- Geocoding
+- Geolocator
+- Bloc Pattern
+- Retrofit
+- Freezed
+- Infinite Scrolling
+- GetIt
+- Omni DatePicker
+- Typeahead
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Before we explore the code please make sure to have the following tools setup on your device:
 
-A few resources to get you started if this is your first Flutter project:
+- [Flutter](https://docs.flutter.dev/get-started/install)
+- [Visual Studio Code](https://code.visualstudio.com/download)
+- [Git](https://git-scm.com/downloads)
+- [Fork](https://git-fork.com/) or any Git client of your preference.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+After downloading our tools here are the following steps you need to do:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the code from this page. [lean more](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+
+2. Open Visual Studio Code
+3. Go to File -> Open -> (Folder where you stored the code from step 1)
+4. Select -> "Yes, I trust the authors"
+5. Open Explore Panel on the left side
+6. Right click on any open space and select open integrated terminal
+7. Type the following commands
+   -flutter pub get
+   -open -a simulator
+   -flutter run
+8. You should see an iOS Simulator open that runs the app. Have Fun!
